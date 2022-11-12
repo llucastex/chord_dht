@@ -16,28 +16,50 @@ class Node:
         self.online = status
         self.next: Node
         self.table = []
-        
-    def generateTableNode(self, tableLength):
-        for line in range(1,NODE_LENGTH + 1):
-            FTp = self.id + 2**(line - 1)
-            node = self.next
+        self.onlineNodes = []
+        self.reqPath = []
+    
+    def reqNode(self, chave):
+        found = False
+        i = 1
+        actualNode = self
+        while not found:
 
-            if (FTp > tableLength ):
-                # self.table.append(None)
-                FTp = FTp - tableLength
-                # continue
-
-            i = 1
-            while(i <= FTp):
-                node = node.next
-                i += 1
-            while(True):
-                if node.online:
-                    self.table.append(FTp)
+            while i <= len(actualNode.table)-1:
+                if chave in actualNode.table:
+                    found = True
+                    return found, actualNode.id
+                if chave >= actualNode.table[i-1] and chave <= actualNode.table[i]:
+                    node = self.onlineNodes[i-1]
                     break
-                else:
-                    FTp += 1
-                    node = node.next
+                elif i == len(actualNode.table)-1:
+                    node = self.onlineNodes[i]
+                i += 1
+            actualNode = node
+            found, actualNode.id = node.reqNode(chave)
+        return found, actualNode.id
+            
+    # def generateTableNode(self, tableLength):
+    #     for line in range(1,NODE_LENGTH + 1):
+    #         FTp = self.id + 2**(line - 1)
+    #         node = self.next
+
+    #         if (FTp > tableLength ):
+    #             # self.table.append(None)
+    #             FTp = FTp - tableLength
+    #             # continue
+
+    #         i = 1
+    #         while(i <= FTp):
+    #             node = node.next
+    #             i += 1
+    #         while(True):
+    #             if node.online:
+    #                 self.table.append(FTp)
+    #                 break
+    #             else:
+    #                 FTp += 1
+    #                 node = node.next
 
     def getId(self):
         return self.id
@@ -54,20 +76,8 @@ class Queue:
         self.first: Node = Node(EMPTY_NODE_VALUE)
         self.last: Node = Node(EMPTY_NODE_VALUE)
         self._count = 0
-    
-    def generateTable(self):
-        node = self.first
-        for i in range(1,len(self)+1):
-            if not node.online:
-                print("Not online")
-                continue
-            node.generateTableNode(len(self))
-            print(node.table)
-            node = node.next
-            # if node.next == self.last:
-            #     break
             
-    def generateTable2(self):
+    def generateTable(self):
         for nodeID in range(1, len(self) + 1):
             actualNode = self.getNode(nodeID)
             if not self.peekOnline(actualNode): continue
@@ -84,6 +94,7 @@ class Queue:
                 while True:
                     if self.peekOnline(nextNode):
                         actualNode.table.append(FTp)
+                        actualNode.onlineNodes.append(nextNode)
                         break
                     else:
                         # FTp += 1
@@ -136,7 +147,7 @@ class Queue:
             self.enqueue(e)
 
     def getNode(self, nodeNumber):
-        if nodeNumber > self._count:
+        if nodeNumber > len(self):
             raise Exception(f"Sorry, node {nodeNumber} doesn't exist!")
         node = self.first
         for _ in range(1, nodeNumber):
@@ -211,5 +222,6 @@ if __name__ == '__main__':
     queue.enqueue(30, False)
     queue.enqueue(31, False)
     queue.enqueue(32, False)
-    queue.generateTable2()
+    queue.generateTable()
     queue.printNodeTable()
+    print(queue.getNode(4).reqNode(28))
