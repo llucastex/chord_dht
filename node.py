@@ -11,9 +11,9 @@ class Node:
         self.next: Node
         self.table = []
         self.onlineNodes = []
-        self.reqPath = []
         self.prevKeys = []
     
+    # Passa as chaves para o proximo nó online
     def sendSucc(self) -> None:
         if self.online: return
         done = False
@@ -26,7 +26,7 @@ class Node:
                 done = True
         accNode.prevKeys.append(actualNode)
 
-
+    # Faz a requisição para um nó
     def reqNode(self, chave):
         found = False
         i = 1

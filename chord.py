@@ -14,6 +14,7 @@ class Chord:
         self.last: Node = Node(EMPTY_NODE_VALUE)
         self._count = 0
             
+    # Gera a tabela de roteamento para cada nó ativo na rede
     def generateTable(self) -> None:
         for nodeID in range(1, len(self) + 1):
             actualNode = self.getNode(nodeID)
@@ -38,12 +39,14 @@ class Chord:
                         nextNode = nextNode.next
                         FTp = nextNode.getId()
 
+    # Simula uma requisição feita para um nó
     def simulateRequest(self, client, key) -> None:
-        if not self.getNode(client).online:
+        if not self.peekOnline(self.getNode(client)):
             raise Exception(f"Node {client} is not online!")
         print(f"\nNode {client} is requesting key {key}")
         self.getNode(client).reqNode(key)
 
+    # Adiciona um nó novo na rede
     def enqueue(self, node_value, status) -> None:
         new_node = Node(node_value, status)
 
@@ -58,20 +61,7 @@ class Chord:
 
         self._count += 1
     
-    def dequeue(self) -> Node:
-        if not self.first:
-            raise EmptyChordError('Empty Chord')
-        
-        first = self.first 
-
-        if hasattr(self.first, 'next'):
-            self.first = self.first.next
-        else:
-            self.first = Node(EMPTY_NODE_VALUE)
-        
-        self._count -= 1
-        return first
-
+    # Retorna o nó baseado no seu ID
     def getNode(self, nodeNumber) -> Node:
         if nodeNumber > len(self):
             raise Exception(f"Sorry, node {nodeNumber} doesn't exist!")
@@ -80,12 +70,14 @@ class Chord:
             node = node.next
         return node
     
+    # Printa a tabela de roteamento dos nós ativos
     def printNodeTable(self) -> None:
         node = self.first
         for _ in range(1, len(self) + 1):
-            if self.peekOnline(node): print(node.table)
+            if self.peekOnline(node): print(f"Nó {node.getId()}: {node.table}")
             node = node.next
 
+    # Printa os nós que cada nó é responsável
     def printPrevKeys(self) -> None:
         node = self.first
         for _ in range(1, len(self) + 1):

@@ -1,5 +1,6 @@
 from chord import *
 
+# Adiciona 32 nós à rede, sinalizando quais estarão online
 queue = Chord()
 queue.enqueue(1, True)
 queue.enqueue(2, False)
@@ -33,10 +34,13 @@ queue.enqueue(29, False)
 queue.enqueue(30, False)
 queue.enqueue(31, False)
 queue.enqueue(32, False)
+
+# Após adicionar os nós, devemos gerar a tabela de roteamento para cada nó
 queue.generateTable()
+# Imprime na tela as tabelas de roteamento para cada nó ativo
 queue.printNodeTable()
 print('----')
-
+# Simula a requisição passando qual nó está fazendo a requisição e qual a chave requerida
 queue.simulateRequest(client = 1, key = 26)
 queue.simulateRequest(client = 4, key = 17)
 queue.simulateRequest(client = 28, key = 12)
