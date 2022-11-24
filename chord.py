@@ -40,15 +40,15 @@ class Chord:
                         FTp = nextNode.getId()
 
     # Simula uma requisição feita para um nó
-    def simulateRequest(self, client, key) -> None:
+    def simulateRequest(self, client: int, key: int) -> None:
         if not self.peekOnline(self.getNode(client)):
             raise Exception(f"Node {client} is not online!")
         print(f"\nNode {client} is requesting key {key}")
         self.getNode(client).reqNode(key)
 
     # Adiciona um nó novo na rede
-    def enqueue(self, node_value, status) -> None:
-        new_node = Node(node_value, status)
+    def enqueue(self, id: int, status: bool) -> None:
+        new_node = Node(id, status)
 
         if not self.first:
             self.first = new_node
@@ -62,11 +62,11 @@ class Chord:
         self._count += 1
     
     # Retorna o nó baseado no seu ID
-    def getNode(self, nodeNumber) -> Node:
-        if nodeNumber > len(self):
-            raise Exception(f"Sorry, node {nodeNumber} doesn't exist!")
+    def getNode(self, id: int) -> Node:
+        if id > len(self):
+            raise Exception(f"Sorry, node {id} doesn't exist!")
         node = self.first
-        for _ in range(1, nodeNumber):
+        for _ in range(1, id):
             node = node.next
         return node
     
@@ -85,7 +85,7 @@ class Chord:
                 print(f"Node {node.id} takes care of: {node.prevKeys}")
             node = node.next
 
-    def peekOnline(self, node) -> bool:
+    def peekOnline(self, node: Node) -> bool:
         return node.online
 
     def __len__(self) -> int:

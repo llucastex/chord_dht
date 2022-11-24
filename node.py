@@ -5,20 +5,20 @@ EMPTY_NODE_VALUE = '__EMPTY_NODE_VALUE__'
 
 class Node:
 
-    def __init__(self, id, status = False) -> None:
-        self.id = id
-        self.online = status
+    def __init__(self, id: int, status: bool = False) -> None:
+        self.id: int = id
+        self.online: bool = status
         self.next: Node
-        self.table = []
-        self.onlineNodes = []
-        self.prevKeys = []
+        self.table: list[int] = []
+        self.onlineNodes: list[Node] = []
+        self.prevKeys: list[Node] = []
     
     # Passa as chaves para o proximo nó online
     def sendSucc(self) -> None:
         if self.online: return
-        done = False
-        actualNode = self
-        accNode = self.next
+        done: bool = False
+        actualNode: Node = self
+        accNode: Node = self.next
         while not done:
             if not accNode.online:
                 accNode = accNode.next
@@ -27,7 +27,7 @@ class Node:
         accNode.prevKeys.append(actualNode)
 
     # Faz a requisição para um nó
-    def reqNode(self, chave):
+    def reqNode(self, chave)-> tuple[bool, int]:
         found = False
         i = 1
         actualNode = self
